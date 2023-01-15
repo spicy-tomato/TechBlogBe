@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="FluentValidation">
+        <HintPath>..\..\..\..\.nuget\packages\fluentvalidation\11.2.1\lib\net6.0\FluentValidation.dll</HintPath>
+      </Reference>
+      <Reference Include="JetBrains.Annotations">
+        <HintPath>..\..\..\..\.nuget\packages\jetbrains.annotations\2022.3.1\lib\netstandard2.0\JetBrains.Annotations.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

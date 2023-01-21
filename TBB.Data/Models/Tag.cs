@@ -1,22 +1,20 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
 namespace TBB.Data.Models;
 
 public class Tag
 {
-    public Tag()
-    {
-        Id = Guid.NewGuid().ToString();
-    }
-    
+    [Key]
     [UsedImplicitly]
-    public string Id { get; set; }
-
-    [Column(TypeName = "varchar(100)")]
     public string Name { get; set; } = null!;
 
+    [UsedImplicitly]
+    public string Description { get; set; } = "";
+
+    [UsedImplicitly]
     public int TrendingPoint { get; set; }
 
+    [UsedImplicitly]
     public ICollection<Post> Posts { get; set; } = null!;
 }

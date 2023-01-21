@@ -1,9 +1,9 @@
 using System.Net;
-using System.Security.Claims;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TBB.API.Core.Controllers;
 using TBB.Common.Core;
 using TBB.Common.Core.Exceptions;
 using TBB.Data.Core.Response;
@@ -17,7 +17,7 @@ namespace TechBlogBe.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly UserManager<User> _userManager;
     private readonly JwtService _jwtService;
@@ -57,10 +57,10 @@ public class UserController : ControllerBase
             errorResponse);
     }
 
-    [HttpGet("{userName}")]
-    public async Task<Result<GetUserResponse>> Get(string userName)
+    [HttpGet("{userId}")]
+    public async Task<Result<GetUserResponse>> Get(string userId)
     {
-        var result = await _userManager.FindByNameAsync(userName);
+        var result = await _userManager.FindByIdAsync(userId);
         if (result == null)
         {
             throw new NotFoundException("User does not exist!");
@@ -93,12 +93,7 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<Result<GetUserResponse>> MyProfile()
     {
-        var userName = User.Claims.First(i => i.Type == ClaimTypes.Name).Value;
-        if (userName == null)
-        {
-            throw new UnauthorizedException();
-        }
-
-        return await Get(userName);
+        var userId = GetUserId();
+        return await Get(userId);
     }
 }

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TechBlogBe.Contexts;
 
@@ -7,10 +8,13 @@ namespace TechBlogBe.Repositories;
 public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 {
     protected ApplicationContext Context { get; }
+    protected readonly IMapper Mapper;
 
-    protected RepositoryBase(ApplicationContext context)
+
+    protected RepositoryBase(ApplicationContext context, IMapper mapper)
     {
         Context = context;
+        Mapper = mapper;
     }
 
     public T? GetById(string id) => Context.Set<T>().Find(id);

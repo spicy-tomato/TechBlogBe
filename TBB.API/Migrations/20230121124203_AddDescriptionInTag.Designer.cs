@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechBlogBe.Contexts;
 
@@ -10,9 +11,10 @@ using TechBlogBe.Contexts;
 namespace TechBlogBe.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230121124203_AddDescriptionInTag")]
+    partial class AddDescriptionInTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,16 +151,16 @@ namespace TechBlogBe.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("CoverImage")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("LikeCount")
                         .HasColumnType("int");

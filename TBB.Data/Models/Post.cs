@@ -10,16 +10,17 @@ public sealed class Post
     [UsedImplicitly]
     public string Id { get; set; } = null!;
 
-    [Column(TypeName = "nvarchar(1000)")]
     [UsedImplicitly]
     public string Title { get; set; } = null!;
 
-    [Column(TypeName = "nvarchar(1000)")]
     [UsedImplicitly]
     public string Body { get; set; } = null!;
 
     [UsedImplicitly]
     public PostMode Mode { get; set; }
+    
+    [UsedImplicitly]
+    public string Image { get; set; } = null!;
 
     public int ViewCount { get; set; }
 

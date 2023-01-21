@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechBlogBe.Contexts;
 
@@ -10,9 +11,10 @@ using TechBlogBe.Contexts;
 namespace TechBlogBe.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230121054049_AddCoverImageToPost")]
+    partial class AddCoverImageToPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,12 +90,12 @@ namespace TechBlogBe.Migrations
                     b.Property<string>("PostsId")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("TagsName")
+                    b.Property<string>("TagsId")
                         .HasColumnType("varchar(255)");
 
-                    b.HasKey("PostsId", "TagsName");
+                    b.HasKey("PostsId", "TagsId");
 
-                    b.HasIndex("TagsName");
+                    b.HasIndex("TagsId");
 
                     b.ToTable("PostTag");
                 });
@@ -149,16 +151,16 @@ namespace TechBlogBe.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("CoverImage")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime>("DeletedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("LikeCount")
                         .HasColumnType("int");
@@ -196,17 +198,17 @@ namespace TechBlogBe.Migrations
 
             modelBuilder.Entity("TBB.Data.Models.Tag", b =>
                 {
-                    b.Property<string>("Name")
+                    b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("TrendingPoint")
                         .HasColumnType("int");
 
-                    b.HasKey("Name");
+                    b.HasKey("Id");
 
                     b.ToTable("Tags");
                 });
@@ -316,7 +318,7 @@ namespace TechBlogBe.Migrations
 
                     b.HasOne("TBB.Data.Models.Tag", null)
                         .WithMany()
-                        .HasForeignKey("TagsName")
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

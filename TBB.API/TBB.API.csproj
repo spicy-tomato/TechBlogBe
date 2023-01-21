@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+        <PackageReference Include="Imagekit" Version="4.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
         <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.12" />
@@ -25,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\TBB.API.Core\TBB.API.Core.csproj" />
       <ProjectReference Include="..\TBB.Data\TBB.Data.csproj" />
+      <ProjectReference Include="..\TBB.Domain\TBB.Domain.csproj" />
     </ItemGroup>
 
 </Project>

@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TBB.API.Core.Filters;
 using TBB.Data.Models;
+using TBB.Domain.Mappings;
 using TechBlogBe.Contexts;
-using TechBlogBe.Repositories;
+using TechBlogBe.Repositories.Implementations;
 using TechBlogBe.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+builder.Services.AddAutoMapper(typeof(ModelMapping));
 
 builder.Services.AddIdentityCore<User>(options =>
 {
@@ -29,7 +32,9 @@ builder.Services.AddIdentityCore<User>(options =>
 }).AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<TagRepository>();
 builder.Services.AddScoped<HttpResponseExceptionFilter>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

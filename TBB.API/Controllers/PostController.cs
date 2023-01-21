@@ -1,20 +1,29 @@
-using System.Security.Claims;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TBB.API.Core.Controllers;
+using TBB.Data.Core.Response;
 using TBB.Data.Models;
-using TechBlogBe.Repositories;
+using TBB.Data.Requests.Post;
+using TBB.Data.Validations;
+using TechBlogBe.Repositories.Implementations;
+using TechBlogBe.Services;
 
 namespace TechBlogBe.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PostController : ControllerBase
+public class PostController : BaseController
 {
     private readonly PostRepository _postRepository;
+    private readonly TagRepository _tagRepository;
+    private readonly ImageService _imageService;
 
-    public PostController(PostRepository postRepository)
+    public PostController(PostRepository postRepository, ImageService imageService, TagRepository tagRepository)
     {
         _postRepository = postRepository;
+        _imageService = imageService;
+        _tagRepository = tagRepository;
     }
 
     [HttpGet]
@@ -22,25 +31,18 @@ public class PostController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public ActionResult<string> Create(CreatePostModel createPostModel)
+    public Result<string> Create(CreatePostRequest request)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
-        var post = createPostModel.ToPost();
-        post.UserId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+        new CreatePostValidator().ValidateAndThrow(request);
+        var userId = GetUserId();
 
-        try
-        {
-            var createdPost = _postRepository.Create(post);
-            return createdPost.Id;
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Cannot create new post " + e.Message);
-        }
+        _tagRepository.CreateRange(request.Tags);
+
+        var createdPost = _postRepository.Create(request, userId);
+        var userName = GetUserName();
+        var postUrl = $"/{userName}/{createdPost.Id}";
+        
+        return Result<string>.Get(postUrl);
     }
 
     [HttpGet("{postId}")]
@@ -61,5 +63,15 @@ public class PostController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError,
                 "Error retrieving data from the database");
         }
+    }
+
+    [HttpPost("cover-image")]
+    [Authorize]
+    public Result<Result> UploadCoverImage()
+    {
+        var file = Request.Form.Files[0];
+        var result = _imageService.Upload(file, "ci");
+
+        return Result<Result>.Get(result);
     }
 }

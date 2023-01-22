@@ -3,15 +3,14 @@ using TBB.Common.Core;
 
 namespace TBB.Data.Core.Response;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class Result<T>
 {
-    [UsedImplicitly]
     public T Data { get; set; } = default!;
 
-    [UsedImplicitly]
     public bool Success { get; set; }
 
-    public IEnumerable<Error>? Errors { [UsedImplicitly] get; set; }
+    public IEnumerable<Error>? Errors { get; set; }
 
     public static Result<T1> Get<T1>(T1 data)
     {

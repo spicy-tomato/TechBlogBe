@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 
 namespace TBB.Data.Models;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class Comment
 {
     public Comment()
@@ -10,7 +11,6 @@ public class Comment
         Id = Guid.NewGuid().ToString();
     }
 
-    [UsedImplicitly]
     public string Id { get; set; }
 
     [Column(TypeName = "nvarchar(1000)")]

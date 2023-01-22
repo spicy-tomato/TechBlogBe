@@ -22,6 +22,7 @@ public class TagRepository : RepositoryBase<Tag>, ITagRepository
                 try
                 {
                     Create(new Tag { Name = tag });
+                    Context.SaveChanges();
                 }
                 catch
                 {
@@ -29,7 +30,5 @@ public class TagRepository : RepositoryBase<Tag>, ITagRepository
                 }
             }
         }
-
-        Context.SaveChanges();
     }
 }

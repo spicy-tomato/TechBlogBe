@@ -3,18 +3,15 @@ using JetBrains.Annotations;
 
 namespace TBB.Data.Models;
 
-public class Tag
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class Tag
 {
     [Key]
-    [UsedImplicitly]
     public string Name { get; set; } = null!;
 
-    [UsedImplicitly]
     public string Description { get; set; } = "";
 
-    [UsedImplicitly]
     public int TrendingPoint { get; set; }
 
-    [UsedImplicitly]
-    public ICollection<Post> Posts { get; set; } = null!;
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
 }

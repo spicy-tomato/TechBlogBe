@@ -1,10 +1,14 @@
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using TBB.API.Core.Controllers;
+using TBB.Common.Core.Exceptions;
 using TBB.Data.Core.Response;
 using TBB.Data.Models;
 using TBB.Data.Requests.Post;
+using TBB.Data.Response.User;
 using TBB.Data.Validations;
 using TechBlogBe.Repositories.Implementations;
 using TechBlogBe.Services;
@@ -19,7 +23,10 @@ public class PostController : BaseController
     private readonly TagRepository _tagRepository;
     private readonly ImageService _imageService;
 
-    public PostController(PostRepository postRepository, ImageService imageService, TagRepository tagRepository)
+    public PostController(IMapper mapper,
+        PostRepository postRepository,
+        ImageService imageService,
+        TagRepository tagRepository) : base(mapper)
     {
         _postRepository = postRepository;
         _imageService = imageService;
@@ -37,32 +44,31 @@ public class PostController : BaseController
         var userId = GetUserId();
 
         _tagRepository.CreateRange(request.Tags);
+        var tags = _tagRepository.Find(tag => request.Tags.Contains(tag.Name));
 
-        var createdPost = _postRepository.Create(request, userId);
+        var createdPost = _postRepository.Create(request, tags, userId);
         var userName = GetUserName();
         var postUrl = $"/{userName}/{createdPost.Id}";
-        
+
         return Result<string>.Get(postUrl);
     }
 
     [HttpGet("{postId}")]
-    public ActionResult<Post> GetPost(string postId)
+    public Result<GetPostResponse> GetPost(string postId)
     {
-        try
+        if (postId.IsNullOrEmpty())
         {
-            var result = _postRepository.GetById(postId);
-            if (result == null)
-            {
-                return NotFound();
-            }
+            throw new BadRequestException("Post ID cannot be empty");
+        }
 
-            return result;
-        }
-        catch (Exception)
+        var result = _postRepository.GetById(postId);
+        if (result == null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError,
-                "Error retrieving data from the database");
+            throw new NotFoundException("Post ID does not exist");
         }
+
+        var post = Mapper.Map<GetPostResponse>(result);
+        return Result<GetPostResponse>.Get(post);
     }
 
     [HttpPost("cover-image")]

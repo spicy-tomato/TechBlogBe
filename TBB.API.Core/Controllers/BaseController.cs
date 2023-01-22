@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using TBB.Common.Core.Exceptions;
 
@@ -6,6 +7,13 @@ namespace TBB.API.Core.Controllers;
 
 public class BaseController : ControllerBase
 {
+    protected readonly IMapper Mapper;
+    
+    public BaseController(IMapper mapper)
+    {
+        Mapper = mapper;
+    }
+
     public string GetUserId()
     {
         try

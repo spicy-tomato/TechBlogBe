@@ -4,22 +4,18 @@ using JetBrains.Annotations;
 
 namespace TBB.Data.Models;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public sealed class Post
 {
     [Key]
-    [UsedImplicitly]
     public string Id { get; set; } = null!;
 
-    [UsedImplicitly]
     public string Title { get; set; } = null!;
 
-    [UsedImplicitly]
     public string Body { get; set; } = null!;
 
-    [UsedImplicitly]
     public PostMode Mode { get; set; }
     
-    [UsedImplicitly]
     public string Image { get; set; } = null!;
 
     public int ViewCount { get; set; }
@@ -38,11 +34,9 @@ public sealed class Post
 
     public DateTime DeletedAt { get; set; }
 
-    [UsedImplicitly]
     public string UserId { get; set; } = null!;
 
-    [UsedImplicitly]
     public User User { get; set; } = null!;
 
-    public ICollection<Tag> Tags { get; set; } = null!;
+    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }

@@ -1,4 +1,5 @@
 using System.Net;
+using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +23,7 @@ public class UserController : BaseController
     private readonly UserManager<User> _userManager;
     private readonly JwtService _jwtService;
 
-    public UserController(UserManager<User> userManager, JwtService jwtService)
+    public UserController(IMapper mapper, UserManager<User> userManager, JwtService jwtService) : base(mapper)
     {
         _userManager = userManager;
         _jwtService = jwtService;
@@ -32,7 +33,8 @@ public class UserController : BaseController
     public async Task<Result<LoginResponse>> SignUp(SignUpRequest request)
     {
         await new SignUpValidator().ValidateAndThrowAsync(request);
-        var userData = request.ToUser();
+        var userData = Mapper.Map<User>(request);
+
         var result = await _userManager.CreateAsync(
             userData,
             request.Password

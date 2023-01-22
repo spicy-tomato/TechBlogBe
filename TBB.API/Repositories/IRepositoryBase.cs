@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 
 namespace TechBlogBe.Repositories;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public interface IRepositoryBase<T>
 {
     T? GetById(string id);

@@ -3,17 +3,15 @@ using JetBrains.Annotations;
 
 namespace TBB.Common.Core;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class Error
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [UsedImplicitly]
     public int? Code { get; }
 
-    [UsedImplicitly]
     public string Message { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [UsedImplicitly]
     public string? Property { get; }
 
     public Error(string message)

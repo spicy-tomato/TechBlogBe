@@ -2,11 +2,9 @@ using JetBrains.Annotations;
 
 namespace TBB.Data.Response.User;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
 public class LoginResponse
 {
-    [UsedImplicitly]
     public string Token { get; set; } = default!;
-
-    [UsedImplicitly]
     public DateTime Expiration { get; set; }
 }

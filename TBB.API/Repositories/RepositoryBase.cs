@@ -10,7 +10,6 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     protected ApplicationContext Context { get; }
     protected readonly IMapper Mapper;
 
-
     protected RepositoryBase(ApplicationContext context, IMapper mapper)
     {
         Context = context;

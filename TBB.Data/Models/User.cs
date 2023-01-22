@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace TBB.Data.Models;
 
-public class User : IdentityUser
+[UsedImplicitly(ImplicitUseTargetFlags.Members)]
+public sealed class User : IdentityUser
 {
-    [UsedImplicitly]
     public string FullName { get; set; } = null!;
 
     //
@@ -26,8 +26,8 @@ public class User : IdentityUser
     // public int TrendingPoint { get; set; }
     //
     // public IdentityUser user { get; set; }
-    //
-    // public ICollection<Post> Posts { get; set; } = new List<Post>();
-    //
+    
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    
     // public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

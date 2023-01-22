@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TBB.Data.Models;
 using TBB.Data.Requests.Post;
 using TechBlogBe.Contexts;
@@ -10,7 +11,7 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
 {
     public PostRepository(ApplicationContext context, IMapper mapper) : base(context, mapper) { }
 
-    public Post Create(CreatePostRequest entity, string userId)
+    public Post Create(CreatePostRequest entity, IEnumerable<Tag> tags, string userId)
     {
         var id = GenerateId(entity.Title);
         while (true)
@@ -24,19 +25,31 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
             id = GenerateIdWithRandomString(entity.Title);
         }
 
+        var tagEnumerable = tags.ToList();
+        Context.Set<Tag>().AttachRange(tagEnumerable);
+
         var post = Mapper.Map<Post>(
             entity,
             options => options.AfterMap((_, des) =>
             {
                 des.Id = id;
                 des.UserId = userId;
+                des.Tags = tagEnumerable;
             })
         );
 
-        var result = Context.Posts.Add(post);
+        var result = Context.Set<Post>().Add(post);
 
         Context.SaveChanges();
         return result.Entity;
+    }
+
+    public new Post? GetById(string id)
+    {
+        return Context.Set<Post>()
+           .Include(p => p.Tags)
+           .Include(p => p.User)
+           .FirstOrDefault(p => p.Id == id);
     }
 
     private static string GenerateId(string postTitle) => string.Join("-", postTitle.ToLower().Split(" "));

@@ -22,6 +22,9 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
 
     public IEnumerable<T> Find(Expression<Func<T, bool>> expression) => Context.Set<T>().Where(expression);
 
+    public Task<List<T>> FindAsync(Expression<Func<T, bool>> expression) =>
+        Context.Set<T>().Where(expression).ToListAsync();
+
     public T Create(T entity) => Context.Set<T>().Add(entity).Entity;
 
     public void CreateRange(IEnumerable<T> entities) => Context.Set<T>().AddRange(entities);

@@ -26,8 +26,8 @@ public sealed class User : IdentityUser
     // public int TrendingPoint { get; set; }
     //
     // public IdentityUser user { get; set; }
-    
+
     public ICollection<Post> Posts { get; set; } = new List<Post>();
-    
+
     // public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

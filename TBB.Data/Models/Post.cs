@@ -15,8 +15,10 @@ public sealed class Post
     public string Body { get; set; } = null!;
 
     public PostMode Mode { get; set; }
-    
+
     public string Image { get; set; } = null!;
+
+    public int TimeToRead { get; set; }
 
     public int ViewCount { get; set; }
 

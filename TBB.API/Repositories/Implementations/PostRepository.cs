@@ -1,7 +1,10 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TBB.Data.Core.Response;
+using TBB.Data.Dtos.Post;
 using TBB.Data.Models;
 using TBB.Data.Requests.Post;
+using TBB.Data.Response.Post;
 using TechBlogBe.Contexts;
 using TechBlogBe.Repositories.Interface;
 
@@ -9,9 +12,15 @@ namespace TechBlogBe.Repositories.Implementations;
 
 public class PostRepository : RepositoryBase<Post>, IPostRepository
 {
+    #region Constructor
+
     public PostRepository(ApplicationContext context, IMapper mapper) : base(context, mapper) { }
 
-    public Post Create(CreatePostRequest entity, IEnumerable<Tag> tags, string userId)
+    #endregion
+
+    #region Public Methods
+
+    public Post Create(CreatePostRequest entity, string userId, IEnumerable<Tag> tags, int timeToRead)
     {
         var id = GenerateId(entity.Title);
         while (true)
@@ -35,6 +44,7 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
                 des.Id = id;
                 des.UserId = userId;
                 des.Tags = tagEnumerable;
+                des.TimeToRead = timeToRead;
             })
         );
 
@@ -44,6 +54,16 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
         return result.Entity;
     }
 
+    public new Result<GetAllPostResponse> GetAll()
+    {
+        var posts = Context.Set<Post>()
+           .Include(p => p.Tags)
+           .Include(p => p.User)
+           .OrderByDescending(p => p.CreatedAt)
+           .Select(p => Mapper.Map<PostSummary>(p)).ToList();
+        return Result<GetAllPostResponse>.Get(new GetAllPostResponse { Posts = posts });
+    }
+
     public new Post? GetById(string id)
     {
         return Context.Set<Post>()
@@ -51,6 +71,10 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
            .Include(p => p.User)
            .FirstOrDefault(p => p.Id == id);
     }
+
+    #endregion
+
+    #region Private Methods
 
     private static string GenerateId(string postTitle) => string.Join("-", postTitle.ToLower().Split(" "));
 
@@ -64,4 +88,6 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
 
         return idFromTitle + "-" + randomString;
     }
+
+    #endregion
 }

@@ -14,7 +14,7 @@ public class BaseController : ControllerBase
         Mapper = mapper;
     }
 
-    public string GetUserId()
+    protected string GetUserId()
     {
         try
         {
@@ -26,7 +26,7 @@ public class BaseController : ControllerBase
         }
     }
 
-    public string GetUserName()
+    protected string GetUserName()
     {
         try
         {

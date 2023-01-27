@@ -1,7 +1,9 @@
 using System.Net;
+using JetBrains.Annotations;
 
 namespace TBB.Common.Core.Exceptions;
 
+[UsedImplicitly]
 public class ConflictException : InnerException
 {
     private const HttpStatusCode CODE = HttpStatusCode.Conflict;

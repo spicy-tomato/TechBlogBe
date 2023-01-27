@@ -96,13 +96,18 @@ public class PostController : BaseController
         var timeToRead = 0;
         foreach (var n in node.ChildNodes)
         {
-            if (n.NodeType == HtmlNodeType.Element)
+            switch (n.NodeType)
             {
-                timeToRead += CountWords(n);
-            }
-            else if (n.NodeType == HtmlNodeType.Text)
-            {
-                timeToRead += StringHelper.Trim(n.InnerText).Split(' ').Length;
+                case HtmlNodeType.Element:
+                    timeToRead += CountWords(n);
+                    break;
+                case HtmlNodeType.Text:
+                    timeToRead += StringHelper.Trim(n.InnerText).Split(' ').Length;
+                    break;
+                case HtmlNodeType.Document:
+                case HtmlNodeType.Comment:
+                default:
+                    break;
             }
         }
 

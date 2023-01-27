@@ -59,17 +59,17 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
         var posts = Context.Set<Post>()
            .Include(p => p.Tags)
            .Include(p => p.User)
-           .OrderByDescending(p => p.CreatedAt)
+           .OrderByDescending(p => p.CreatedAt).ToList()
            .Select(p => Mapper.Map<PostSummary>(p)).ToList();
         return Result<GetAllPostResponse>.Get(new GetAllPostResponse { Posts = posts });
     }
 
     public new Post? GetById(string id)
     {
-        return Context.Set<Post>()
+        var post = Context.Set<Post>()
            .Include(p => p.Tags)
-           .Include(p => p.User)
-           .FirstOrDefault(p => p.Id == id);
+           .Include(p => p.User).FirstOrDefault(p => p.Id == id);
+        return post;
     }
 
     #endregion

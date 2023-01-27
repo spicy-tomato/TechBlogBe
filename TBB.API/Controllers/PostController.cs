@@ -13,7 +13,6 @@ using TBB.Data.Response.Post;
 using TBB.Data.Response.User;
 using TBB.Data.Validations;
 using TechBlogBe.Repositories.Implementations;
-using TechBlogBe.Services;
 
 namespace TechBlogBe.Controllers;
 
@@ -23,15 +22,10 @@ public class PostController : BaseController
 {
     private readonly PostRepository _postRepository;
     private readonly TagRepository _tagRepository;
-    private readonly ImageService _imageService;
 
-    public PostController(IMapper mapper,
-        PostRepository postRepository,
-        ImageService imageService,
-        TagRepository tagRepository) : base(mapper)
+    public PostController(IMapper mapper, PostRepository postRepository, TagRepository tagRepository) : base(mapper)
     {
         _postRepository = postRepository;
-        _imageService = imageService;
         _tagRepository = tagRepository;
     }
 
@@ -51,19 +45,9 @@ public class PostController : BaseController
 
         var createdPost = _postRepository.Create(request, userId, tags, timeToRead);
         var userName = GetUserName();
-        var postUrl = $"/{userName}/{createdPost.Id}";
+        var postUrl = $"/u/{userName}/{createdPost.Id}";
 
         return Result<string>.Get(postUrl);
-    }
-
-    [HttpPost("cover-image")]
-    [Authorize]
-    public Result<Result> UploadCoverImage()
-    {
-        var file = Request.Form.Files[0];
-        var result = _imageService.Upload(file, "ci");
-
-        return Result<Result>.Get(result);
     }
 
     [HttpGet("{postId}")]

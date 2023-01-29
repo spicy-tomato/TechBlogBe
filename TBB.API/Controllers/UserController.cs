@@ -60,20 +60,16 @@ public class UserController : BaseController
     }
 
     [HttpGet("{userId}")]
-    public async Task<Result<GetUserResponse>> Get(string userId)
+    public async Task<Result<UserSummary>> Get(string userId)
     {
-        var result = await _userManager.FindByIdAsync(userId);
+        var result = await _userManager.FindByNameAsync(userId);
         if (result == null)
         {
             throw new NotFoundException("User does not exist!");
         }
 
-        var user = new GetUserResponse
-        {
-            UserName = result.UserName,
-            FullName = result.FullName
-        };
-        return Result<GetUserResponse>.Get(user);
+        var user = Mapper.Map<UserSummary>(result);
+        return Result<UserSummary>.Get(user);
     }
 
     [HttpPost("login")]
@@ -93,9 +89,16 @@ public class UserController : BaseController
 
     [HttpGet("me")]
     [Authorize]
-    public async Task<Result<GetUserResponse>> MyProfile()
+    public async Task<Result<UserSummary>> MySummaryInfo()
     {
         var userId = GetUserId();
-        return await Get(userId);
+        var result = await _userManager.FindByIdAsync(userId);
+        if (result == null)
+        {
+            throw new UnauthorizedException("User does not exist!");
+        }
+
+        var user = Mapper.Map<UserSummary>(result);
+        return Result<UserSummary>.Get(user);
     }
 }

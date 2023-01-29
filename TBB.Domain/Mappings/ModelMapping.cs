@@ -44,6 +44,10 @@ public class ModelMapping : Profile
         #region User
 
         CreateMap<User, SimpleUserDto>();
+        CreateMap<User, UserSummary>()
+           .ForMember(dest => dest.JoinedDate,
+                opt => opt.MapFrom(src => src.CreatedAt)
+            );
         CreateMap<SignUpResponse, User>();
 
         #endregion

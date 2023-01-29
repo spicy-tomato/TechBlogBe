@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,6 +8,9 @@ namespace TBB.Data.Models;
 public sealed class User : IdentityUser
 {
     public string FullName { get; set; } = null!;
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public DateTime CreatedAt { get; set; }
 
     //
     // public DateTime Birth { get; set; }

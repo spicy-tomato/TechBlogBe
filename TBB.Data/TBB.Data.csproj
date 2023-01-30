@@ -7,24 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="FluentValidation">
-        <HintPath>..\..\..\..\.nuget\packages\fluentvalidation\11.2.1\lib\net6.0\FluentValidation.dll</HintPath>
-      </Reference>
-      <Reference Include="JetBrains.Annotations">
-        <HintPath>..\..\..\..\.nuget\packages\jetbrains.annotations\2022.3.1\lib\netstandard2.0\JetBrains.Annotations.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Identity.Core">
-        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\6.0.12\ref\net6.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
-      </Reference>
-      <Reference Include="Microsoft.Extensions.Identity.Stores">
-        <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.app.ref\6.0.12\ref\net6.0\Microsoft.Extensions.Identity.Stores.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.4.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+      <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="6.0.13" />
     </ItemGroup>
 
 </Project>

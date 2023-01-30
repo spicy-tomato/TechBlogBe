@@ -20,8 +20,14 @@ namespace TechBlogBe.Controllers;
 [Route("[controller]")]
 public class PostController : BaseController
 {
+    #region Properties
+
     private readonly PostRepository _postRepository;
     private readonly TagRepository _tagRepository;
+
+    #endregion
+
+    #region Constructor
 
     public PostController(IMapper mapper, PostRepository postRepository, TagRepository tagRepository) : base(mapper)
     {
@@ -29,8 +35,18 @@ public class PostController : BaseController
         _tagRepository = tagRepository;
     }
 
+    #endregion
+
+    #region Public Methods
+
     [HttpGet]
-    public Result<GetAllPostResponse> GetAll() => _postRepository.GetAll();
+    public Result<GetAllPostResponse> GetAll()
+    {
+        var userName = Request.Query["userName"].ToString();
+        var hasOffset = DateTime.TryParse(Request.Query["offset"].ToString(), out var offset);
+        var hasSize = int.TryParse(Request.Query["size"].ToString(), out var size);
+        return _postRepository.GetAll(userName, hasOffset ? offset : null, hasSize ? size : null);
+    }
 
     [HttpPost]
     [Authorize]
@@ -51,7 +67,7 @@ public class PostController : BaseController
     }
 
     [HttpGet("{postId}")]
-    public Result<GetPostResponse> GetPost(string postId)
+    public Result<GetPostResponse> GetPostById(string postId)
     {
         if (postId.IsNullOrEmpty())
         {
@@ -67,6 +83,10 @@ public class PostController : BaseController
         var post = Mapper.Map<GetPostResponse>(result);
         return Result<GetPostResponse>.Get(post);
     }
+
+    #endregion
+
+    #region Private Methods
 
     private static int CalculateTimeToRead(string postBody)
     {
@@ -97,4 +117,6 @@ public class PostController : BaseController
 
         return timeToRead;
     }
+
+    #endregion
 }

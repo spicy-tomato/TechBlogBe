@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using TBB.Data.Core.Response;
 using TBB.Data.Dtos.Post;
 using TBB.Data.Models;
@@ -54,12 +55,15 @@ public class PostRepository : RepositoryBase<Post>, IPostRepository
         return result.Entity;
     }
 
-    public new Result<GetAllPostResponse> GetAll()
+    public Result<GetAllPostResponse> GetAll(string? userName, DateTime? offset, int? size)
     {
         var posts = Context.Set<Post>()
            .Include(p => p.Tags)
            .Include(p => p.User)
+           .Where(p => (userName.IsNullOrEmpty() || p.User.UserName == userName) &&
+                       (offset == null || p.CreatedAt < offset))
            .OrderByDescending(p => p.CreatedAt).ToList()
+           .Take(size ?? 20)
            .Select(p => Mapper.Map<PostSummary>(p)).ToList();
         return Result<GetAllPostResponse>.Get(new GetAllPostResponse { Posts = posts });
     }

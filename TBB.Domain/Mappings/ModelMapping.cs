@@ -3,6 +3,7 @@ using TBB.Data.Dtos.Post;
 using TBB.Data.Dtos.User;
 using TBB.Data.Models;
 using TBB.Data.Requests.Post;
+using TBB.Data.Requests.User;
 using TBB.Data.Response.User;
 
 namespace TBB.Domain.Mappings;
@@ -48,6 +49,7 @@ public class ModelMapping : Profile
            .ForMember(dest => dest.JoinedDate,
                 opt => opt.MapFrom(src => src.CreatedAt)
             );
+        CreateMap<SignUpRequest, User>();
         CreateMap<SignUpResponse, User>();
 
         #endregion

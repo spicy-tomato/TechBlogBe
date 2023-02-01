@@ -4,6 +4,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using TBB.API.Core.Controllers;
 using TBB.Common.Core;
 using TBB.Common.Core.Exceptions;
@@ -57,6 +58,29 @@ public class UserController : BaseController
         throw new HttpException(
             isDuplicated ? HttpStatusCode.Conflict : HttpStatusCode.InternalServerError,
             errorResponse);
+    }
+
+    [HttpGet("check-exist")]
+    public async Task<Result<bool>> RegisterInfoIsDuplicate()
+    {
+        var userName = Request.Query["userName"].ToString();
+        var email = Request.Query["email"].ToString();
+        bool existed;
+
+        if (!userName.IsNullOrEmpty())
+        {
+            existed = await _userManager.FindByNameAsync(userName) != null;
+        }
+        else if (!email.IsNullOrEmpty())
+        {
+            existed = await _userManager.FindByEmailAsync(email) != null;
+        }
+        else
+        {
+            throw new BadRequestException("Invalid query param(s)");
+        }
+
+        return Result<UserSummary>.Get(existed);
     }
 
     [HttpGet("{userId}")]

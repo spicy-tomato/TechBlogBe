@@ -4,3 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 appsettings*.json
+deployment.xml
+sshConfigs.xml
+webServers.xml
+workspace.xml
